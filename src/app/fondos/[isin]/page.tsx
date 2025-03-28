@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Fund } from '@/types/fund'
 import Link from 'next/link'
+import FundChart from '@/components/FundChart'
 
 export default function FundDetail({ params }: { params: { isin: string } }) {
   const [fund, setFund] = useState<Fund | null>(null)
@@ -82,8 +83,7 @@ export default function FundDetail({ params }: { params: { isin: string } }) {
 
       <div className="mt-12">
         <h2 className="text-2xl font-bold mb-6">Evolución del valor liquidativo</h2>
-        {/* Aquí iría el gráfico de evolución */}
-        <div className="bg-gray-100 h-96 rounded-lg"></div>
+        <FundChart isin={fund.isin} />
       </div>
 
       <div className="mt-12">
