@@ -6,9 +6,23 @@ module.exports = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    container: {
+      center: true,
+      padding: '1rem',
+      screens: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px',
+        '2xl': '1536px',
+      },
+    },
     extend: {
+      maxWidth: {
+        '7xl': 'none',
+      },
       colors: {
-        primary: 'var(--primary-red)',
+        'primary': '#E31837',
         dark: 'var(--dark-gray)',
         light: 'var(--light-gray)',
         link: 'var(--link-blue)',

@@ -5,8 +5,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Self Bank - Buscador de fondos de inversión',
-  description: 'Buscador de fondos de inversión de Self Bank',
+  title: 'SelfBank - Buscador de Fondos',
+  description: 'Encuentra los mejores fondos de inversión con SelfBank',
 }
 
 export default function RootLayout({
@@ -17,9 +17,9 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={inter.className}>
-        <div className="min-h-screen flex flex-col">
+        <main className="w-full">
           {children}
-        </div>
+        </main>
       </body>
     </html>
   )
