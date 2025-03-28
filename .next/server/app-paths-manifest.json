@@ -1,0 +1,5 @@
+{
+  "/page": "app/page.js",
+  "/api/funds/route": "app/api/funds/route.js",
+  "/fondos/[isin]/page": "app/fondos/[isin]/page.js"
+}
