@@ -83,7 +83,7 @@ export default function FundDetail({ params }: { params: { isin: string } }) {
 
       <div className="mt-12">
         <h2 className="text-2xl font-bold mb-6">Evolución del valor liquidativo</h2>
-        <FundChart isin={fund.isin} />
+        <FundChart isin={fund.isin} name={fund.name} />
       </div>
 
       <div className="mt-12">
