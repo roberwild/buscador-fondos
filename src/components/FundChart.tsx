@@ -29,6 +29,54 @@ interface FundChartProps {
   name: string
 }
 
+// Tipos para Yahoo Finance
+interface YahooQuote {
+  exchange?: string
+  shortname?: string
+  quoteType?: string
+  symbol: string
+  index?: string
+  score?: number
+  typeDisp?: string
+  longname?: string
+  exchDisp?: string
+  sector?: string
+  industry?: string
+  isYahooFinance?: boolean
+}
+
+interface YahooSearchResult {
+  explains: any[]
+  count: number
+  quotes: YahooQuote[]
+  news: any[]
+  nav: any[]
+  lists: any[]
+  researchReports: any[]
+  totalTime: number
+  timeTaken: number
+  screenerFieldResults?: any[]
+  culturalAssets?: any[]
+  timeTakenForScreenerField?: number
+  timeTakenForCulturalAssets?: number
+  timeTakenForNews: number
+  timeTakenForAlgowatchlist: number
+  timeTakenForPredefinedScreener: number
+  timeTakenForCrunchbase: number
+  timeTakenForNav: number
+  timeTakenForResearchReports: number
+}
+
+interface HistoricalDataPoint {
+  date: Date
+  close: number
+  high: number
+  low: number
+  open: number
+  volume: number
+  adjClose: number
+}
+
 export default function FundChart({ isin, name }: FundChartProps) {
   const [chartData, setChartData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
@@ -50,8 +98,8 @@ export default function FundChart({ isin, name }: FundChartProps) {
           `${name.replace(/\s+/g, '-')}`, // Nombre del fondo formateado
         ]
 
-        let result = null
-        let usedSymbol = null
+        let result: HistoricalDataPoint[] | null = null
+        let usedSymbol: string | null = null
 
         // Intentamos buscar el símbolo correcto primero
         try {
@@ -59,26 +107,23 @@ export default function FundChart({ isin, name }: FundChartProps) {
             quotesCount: 5,
             newsCount: 0,
             enableFuzzyQuery: true,
-            enableCb: false
-          })
+            enableCb: false,
+          }) as unknown as YahooSearchResult
 
           if (searchResults.quotes && searchResults.quotes.length > 0) {
             // Filtramos para encontrar coincidencias con el ISIN o nombre similar
-            const matchingQuote = searchResults.quotes.find(quote => {
-              if ('symbol' in quote && 'longname' in quote) {
-                return quote.symbol.includes(isin) || 
-                       quote.longname?.toLowerCase().includes(name.toLowerCase())
-              }
-              return false
-            })
+            const matchingQuote = searchResults.quotes.find(quote => 
+              quote.symbol.includes(isin) || 
+              quote.longname?.toLowerCase().includes(name.toLowerCase())
+            )
             
-            if (matchingQuote && 'symbol' in matchingQuote) {
+            if (matchingQuote) {
               usedSymbol = matchingQuote.symbol
               result = await yahooFinance.historical(usedSymbol, {
                 period1: new Date(Date.now() - 5 * 365 * 24 * 60 * 60 * 1000),
                 period2: new Date(),
                 interval: '1mo'
-              })
+              }) as HistoricalDataPoint[]
             }
           }
         } catch (searchError) {
@@ -93,7 +138,8 @@ export default function FundChart({ isin, name }: FundChartProps) {
                 period1: new Date(Date.now() - 5 * 365 * 24 * 60 * 60 * 1000),
                 period2: new Date(),
                 interval: '1mo'
-              })
+              }) as HistoricalDataPoint[]
+
               if (data && data.length > 0) {
                 result = data
                 usedSymbol = symbol
