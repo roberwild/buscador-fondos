@@ -9,14 +9,14 @@ function parseNumericValue(value: string | undefined): number {
 
 function parseRiskLevel(value: string): RiskLevel {
   const riskMap: { [key: string]: RiskLevel } = {
-    '1': 'Muy bajo',
-    '2': 'Bajo',
-    '3': 'Moderado',
-    '4': 'Medio-alto',
-    '5': 'Alto',
-    '6': 'Muy alto',
+    '1': 'Riesgo bajo',
+    '2': 'Riesgo bajo',
+    '3': 'Riesgo moderado',
+    '4': 'Riesgo medio-alto',
+    '5': 'Riesgo alto',
+    '6': 'Riesgo muy alto',
   };
-  return riskMap[value] || 'Moderado';
+  return riskMap[value] || 'Sin valorar';
 }
 
 export const processCSVData = (csvData: string): Fund[] => {
@@ -46,5 +46,6 @@ export const processCSVData = (csvData: string): Fund[] => {
     kiid_url: row['URL KID PRIIPS'] || '',
     risk_level: parseRiskLevel(row['REQ']),
     morningstar_rating: parseInt(row['Morningstar Rating'] || '0'),
+    available_for_implicit_advisory: false,
   }));
 }; 
