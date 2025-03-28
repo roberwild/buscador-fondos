@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Search, Filter } from 'lucide-react'
+import { Search, Filter, X } from 'lucide-react'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { FundTable } from '@/components/FundTable'
@@ -13,6 +13,7 @@ export default function Home() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedCurrency, setSelectedCurrency] = useState('');
   const [selectedRiskLevels, setSelectedRiskLevels] = useState<RiskLevel[]>([]);
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategories(prev => {
@@ -36,27 +37,52 @@ export default function Home() {
     });
   };
 
+  const toggleFilterPanel = () => {
+    setIsFilterPanelOpen(!isFilterPanelOpen);
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
       
       <main className="flex-grow">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-4xl font-bold">Buscador de Fondos de Inversión</h1>
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+            <h1 className="text-3xl sm:text-4xl font-bold">Buscador de Fondos de Inversión</h1>
             <Link 
               href="https://www.selfbank.es/"
-              className="bg-[#D1472C] text-white px-6 py-2 rounded-md hover:bg-red-700 transition-colors"
+              className="bg-[#D1472C] text-white px-6 py-2 rounded-md hover:bg-red-700 transition-colors text-sm sm:text-base whitespace-nowrap"
             >
               ¡EMPIEZA A OPERAR CON FONDOS YA!
             </Link>
           </div>
 
-          <div className="flex gap-8">
+          {/* Botón para mostrar/ocultar filtros en móvil */}
+          <button
+            onClick={toggleFilterPanel}
+            className="md:hidden flex items-center gap-2 mb-4 bg-gray-100 px-4 py-2 rounded-md"
+          >
+            <Filter size={20} />
+            <span>{isFilterPanelOpen ? 'Ocultar filtros' : 'Mostrar filtros'}</span>
+          </button>
+
+          <div className="flex flex-col md:flex-row gap-8">
             {/* Panel lateral de filtros */}
-            <div className="w-72 flex-shrink-0">
-              <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-xl font-semibold mb-6">Filtrar fondos de inversión</h2>
+            <div className={`
+              md:w-72 md:flex-shrink-0
+              fixed md:static inset-0 z-30 bg-white md:bg-transparent
+              transition-transform duration-300 ease-in-out
+              ${isFilterPanelOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+            `}>
+              <div className="bg-white h-full md:h-auto overflow-y-auto md:rounded-lg md:shadow p-6">
+                <div className="flex justify-between items-center mb-6 md:hidden">
+                  <h2 className="text-xl font-semibold">Filtros</h2>
+                  <button onClick={toggleFilterPanel} className="p-2">
+                    <X size={24} />
+                  </button>
+                </div>
+
+                <h2 className="hidden md:block text-xl font-semibold mb-6">Filtrar fondos de inversión</h2>
                 
                 {/* Búsqueda por ISIN */}
                 <div className="mb-6">
@@ -141,6 +167,14 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
+            {/* Overlay para cerrar el panel en móvil */}
+            {isFilterPanelOpen && (
+              <div 
+                className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+                onClick={toggleFilterPanel}
+              />
+            )}
 
             {/* Contenido principal */}
             <div className="flex-1 overflow-x-auto">
